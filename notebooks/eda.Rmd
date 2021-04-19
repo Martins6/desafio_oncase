@@ -1,0 +1,30 @@
+---
+title: "Exploratory Data Analysis"
+author: "Adriel Martins"
+date: "4/19/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Objetivo
+
+a. Construa uma análise descritiva extraindo conhecimento das variáveis
+e apresentando quais insights podem ser obtidos a partir delas;
+b. Construa graficamente um storytelling a partir das variáveis apresentadas no
+problema;
+c. Descreva o caminho escolhido para sua EDA;
+d. Descreva quais outras técnicas poderiam ser aplicas e porquê você não as
+escolheu;
+e. Utilize os dados: eda_data.zip
+
+# Setup dos Dados
+
+```{r data-setup}
+
+
+```
+
+

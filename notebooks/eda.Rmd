@@ -6,6 +6,8 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
+library(tidyverse)
+library(jsonlite)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -23,8 +25,10 @@ e. Utilize os dados: eda_data.zip
 # Setup dos Dados
 
 ```{r data-setup}
-
-
+df <- 
+  fromJSON('data/receitas.json') %>% 
+  as_tibble()
+df
 ```
 
 

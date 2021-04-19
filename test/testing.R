@@ -1,5 +1,4 @@
 library(tidyverse)
-#library(rjson)
 library(jsonlite)
 
 df <- 
@@ -7,5 +6,5 @@ df <-
   as_tibble()
 
 df %>% 
-  pull(rating) %>% 
-  unique()
+  head(20) %>% 
+  colnames()

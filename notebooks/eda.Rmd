@@ -80,7 +80,8 @@ espaços equi-espaçados, vemos que só conseguimos contar valores que cairám e
 um espaço basicamente. Ou seja, o quarto quartil está de fato muito distante dos demais.
 
 Iremos realizar a limpeza deste dados ao considerarmos somente os valores abaixo
-do quantil de 95%.
+do quantil de 95%. Pois, ao retirarmos tão poucos dados ainda conseguimos obter
+os insights das variáveis.
 
 ```{r}
 clean_outliers <- function(df, var, q=.95){
@@ -153,12 +154,30 @@ público, em geral, procura saber nas receitas pelas dietas específicas que
 restringem a quantidade de algum ou todos estes elementos.
 
 ```{r}
-
 df %>% 
+  filter(!is.na(rating)) %>% 
   mutate(rating = as.factor(rating)) %>% 
+  select(all_of(c('sodium', 'fat', 'protein', 'calories', 'rating'))) %>%
+  pivot_longer(cols = all_of(c('sodium', 'fat', 'protein', 'calories'))) %>%
   ggplot() +
-  geom_boxplot(aes(y = protein, x = rating, colour = rating))
+  geom_boxplot(aes(x = rating, y = value)) +
+  facet_wrap(~name, scales = "free")
+```
 
+Podemos notar alguns padrões, porém não tão relevantes. Vemos que em geral, se
+há um aumento desses elementos, há também um aumento do rating. Contudo, em
+relação ao ratings com nota 5, vemos que eles sempre tem quantidades moderadas
+de todos estes elementos.
+
+## Ingredientes
+
+Vejamos o impacto dos ingredientes na variável de rating.
+
+
+```{r}
+df %>% 
+  head() %>% 
+  pull(categories)
 ```
 
 

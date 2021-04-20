@@ -24,27 +24,12 @@ for(i in c('sodium', 'fat', 'protein', 'calories')){
     df %>% 
     clean_outliers(i)
 }
-df
-
 
 
 df %>% 
-  select(all_of(c('fat', 'protein', 'sodium', 'calories'))) %>% 
-  pivot_longer(cols = everything(), names_to = 'variable') %>% 
-  ggplot() +
-  geom_histogram(aes(x = value)) +
-  facet_wrap(~variable) +
-  labs(title = 'Histograma das variáveis contínuas')
-  
-
-
-
-
-
-
-
-
-
+  head() %>% 
+  mutate(target = map_dbl(categories, length)) %>% 
+  pull(target)
 
 
 

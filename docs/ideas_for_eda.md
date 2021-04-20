@@ -2,7 +2,7 @@
 
 1. Understanding what makes the better rating
 
-* Rating vs. [fat, calories, protein, sodium]
+* Rating vs. [fat, calories, protein, sodium] **(DONE)**
 * Rating vs. ingredients
 * Rating vs. categories
 * Rating vs. number of directions

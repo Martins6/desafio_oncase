@@ -8,7 +8,13 @@ output: html_document
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(jsonlite)
-knitr::opts_chunk$set(echo = TRUE)
+library(skimr)
+
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE)
+knitr::opts_knit$set(
+  root.dir = '/home/adriel_martins/Documents/desafio_oncase/')
+
+theme_set(theme_bw())
 ```
 
 # Objetivo
@@ -22,13 +28,143 @@ d. Descreva quais outras técnicas poderiam ser aplicas e porquê você não as
 escolheu;
 e. Utilize os dados: eda_data.zip
 
-# Setup dos Dados
+# Lendo os Dados
 
 ```{r data-setup}
 df <- 
   fromJSON('data/receitas.json') %>% 
   as_tibble()
-df
+
+df %>% 
+  head()
+
+skim(df)
 ```
+
+Vemos que não há variável ou coluna inútil, com número muito alto de missing,
+sendo assim, procederemos sem ignorar nenhuma coluna.
+
+Inicialmente, fazendo um rápido dicionário dos dados e seus significados, temos
+que:
+
+* directions: são as instruções da receita;
+* fat: quantidade de gordura;
+* date: é a data que essa receita foi catalogada.
+* categories: as categorias que essa receita se encaixa.
+* calories: quantidade de calorias presente.
+* desc: a descrição mais detalhada da receita.
+* protein: a quantidade de proteína.
+* rating: a avaliação daquela receita numa determinada plataforma.
+* title: o título daquela receita.
+* ingredientes: os ingredientes utilizados para fazer aquela receita.
+* sodium: quantidade de sódio na receita.
+
+# Limpando os dados
+
+Em respeito as variáveis númericas fat, protein, etc.. Suspeitamos de valores
+extremos por conta da disparidade de valores entre os terceiro e quarto quartil.
+Notamos que o valor verdadeiramente explode.
+
+```{r}
+df %>% 
+  select(all_of(c('fat', 'protein', 'sodium', 'calories'))) %>% 
+  pivot_longer(cols = everything(), names_to = 'variable') %>% 
+  ggplot() +
+  geom_histogram(aes(x = value), bins=100) +
+  facet_wrap(~variable) +
+  labs(title = 'Histograma das variáveis contínuas')
+```
+
+No gráfico acima, percebemos que ao montarmos um histograma considerando 100
+espaços equi-espaçados, vemos que só conseguimos contar valores que cairám em
+um espaço basicamente. Ou seja, o quarto quartil está de fato muito distante dos demais.
+
+Iremos realizar a limpeza deste dados ao considerarmos somente os valores abaixo
+do quantil de 95%.
+
+```{r}
+clean_outliers <- function(df, var, q=.95){
+  "
+  Filter tibble with values in the column less than the q% quantile. 
+  "
+  df <- 
+    df %>% 
+    dplyr::filter(is.na(.data[[var]]) | 
+                    .data[[var]] <= quantile(.data[[var]],
+                                             probs=q,
+                                             na.rm=TRUE)
+                  )
+  return(df)
+}
+
+for(i in c('sodium', 'fat', 'protein', 'calories')){
+  df <- 
+    df %>% 
+    clean_outliers(i)
+}
+
+df %>% 
+  select(all_of(c('fat', 'protein', 'sodium', 'calories'))) %>% 
+  pivot_longer(cols = everything(), names_to = 'variable') %>% 
+  ggplot() +
+  geom_histogram(aes(x = value), bins = 100) +
+  facet_wrap(~variable) +
+  labs(title = 'Histograma das variáveis contínuas')
+
+```
+
+
+# Perguntas e Respostas
+
+O formato de exploração dos dados escolhidos é o estilo pergunta e respostas.
+Inicialmente, traçamos algumas perguntas e tentamos obter a resposta através de
+análises gráficas, em especial, dos dados.
+
+# Pergunta 1: O que faz um bom rating?
+
+## Variável Rating
+
+Para responder esta pergunta, comecemos com o questionamento de como é que está a quantidade dos ratings distribuídas.
+
+```{r rating-dist}
+
+df %>% 
+  ggplot() +
+  geom_bar(aes(x = rating)) +
+  scale_x_continuous(breaks = seq(0, 5, by = 1)) +
+  labs(title = 'Gráfico de barras do Rating',
+       subtitle = 'Quantidade do valor vs. valor')
+```
+
+Vemos que poucas pessoas dão notas maiores que 0 e menores que 3. Sendo assim,
+podemos fazer nossa hipótese que se um serviço é menor que 3 estrelas, as 
+pessoas tendem a colocar a nota 0. Além disso, notamos como há poucos valores
+únicos: há 8 valores. **Isto transforma o caráter contínuo da variável rating que
+poderia variar livremente entre 0 e 5, em basicamente, uma variável discreta.**
+
+## Fat, sodium, protein, etc..
+
+Voltando ao foco de nossa pergunta. Temos algumas variáveis explicativas em
+relação a nossa variável que queremos entender melhor: rating.
+
+Comecemos querendo entender como essa variável se comporta, em relação aos
+elementos _fat, protein, sodium, protein, calories_. Pois, são elementos que o
+público, em geral, procura saber nas receitas pelas dietas específicas que
+restringem a quantidade de algum ou todos estes elementos.
+
+```{r}
+
+df %>% 
+  mutate(rating = as.factor(rating)) %>% 
+  ggplot() +
+  geom_boxplot(aes(y = protein, x = rating, colour = rating))
+
+```
+
+
+
+
+
+
 
 

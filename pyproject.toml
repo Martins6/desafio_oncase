@@ -14,6 +14,7 @@ matplotlib = "^3.4.1"
 seaborn = "^0.11.1"
 xgboost = "^1.4.1"
 shap = "^0.39.0"
+scikit-learn-extra = "^0.2.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.9.1"

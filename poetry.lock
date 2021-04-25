@@ -509,6 +509,23 @@ examples = ["matplotlib (>=2.1.1)", "scikit-image (>=0.13)", "pandas (>=0.25.0)"
 tests = ["matplotlib (>=2.1.1)", "scikit-image (>=0.13)", "pandas (>=0.25.0)", "pytest (>=5.0.1)", "pytest-cov (>=2.9.0)", "flake8 (>=3.8.2)", "mypy (>=0.770)", "pyamg (>=4.0.0)"]
 
 [[package]]
+name = "scikit-learn-extra"
+version = "0.2.0"
+description = "A set of tools for scikit-learn."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+numpy = ">=1.13.3"
+scikit-learn = ">=0.23.0"
+scipy = ">=0.19.1"
+
+[package.extras]
+docs = ["pillow", "sphinx", "sphinx-gallery", "sphinx-rtd-theme", "numpydoc", "matplotlib"]
+tests = ["pytest", "pytest-cov"]
+
+[[package]]
 name = "scipy"
 version = "1.6.1"
 description = "SciPy: Scientific Library for Python"
@@ -671,7 +688,7 @@ scikit-learn = ["scikit-learn"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "730952938afb6383682dd1b6d65a99a54f35a501cce569f2fe1742a7caebba83"
+content-hash = "88f2966d29f958ed0868b7f178432981346b77e1c121b6eabe4faaedddabe007"
 
 [metadata.files]
 appdirs = [
@@ -1140,6 +1157,37 @@ scikit-learn = [
     {file = "scikit_learn-0.24.1-cp39-cp39-manylinux2010_x86_64.whl", hash = "sha256:9a24d1ccec2a34d4cd3f2a1f86409f3f5954cc23d4d2270ba0d03cf018aa4780"},
     {file = "scikit_learn-0.24.1-cp39-cp39-win32.whl", hash = "sha256:fab31f48282ebf54dd69f6663cd2d9800096bad1bb67bbc9c9ac84eb77b41972"},
     {file = "scikit_learn-0.24.1-cp39-cp39-win_amd64.whl", hash = "sha256:4562dcf4793e61c5d0f89836d07bc37521c3a1889da8f651e2c326463c4bd697"},
+]
+scikit-learn-extra = [
+    {file = "scikit-learn-extra-0.2.0.tar.gz", hash = "sha256:3b1bb5fedde47920eb4b3fa0a0c18f80cc7359d9d0496720178788c6153b8019"},
+    {file = "scikit_learn_extra-0.2.0-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:dcc987da2a1c7224da5ad3c64f7cb1257e765b7726f37ab6bcdbe1b34537c507"},
+    {file = "scikit_learn_extra-0.2.0-cp36-cp36m-manylinux1_i686.whl", hash = "sha256:4dba08fd390f314d7a9fdca2b9b2cef52e5a40e0f76996dc85e52e3c0e6e1ff5"},
+    {file = "scikit_learn_extra-0.2.0-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:9d9df0c48c11bf8ebdf4afd154a5085cdd1c72db05349b2aabd39c2de58e1d00"},
+    {file = "scikit_learn_extra-0.2.0-cp36-cp36m-manylinux2010_i686.whl", hash = "sha256:191508d14d04875eb78ee1282b6a20949a367ce07b58dccb9005f24834f1a5f2"},
+    {file = "scikit_learn_extra-0.2.0-cp36-cp36m-manylinux2010_x86_64.whl", hash = "sha256:aa7fb5318030aeb98070802e1f23925a3370fb994e5655a7c26c382e5dfe39f2"},
+    {file = "scikit_learn_extra-0.2.0-cp36-cp36m-win32.whl", hash = "sha256:66423e36d0b94d06b4dd1d697b80de873a323c7648cc1e4896c14df2cc8390c6"},
+    {file = "scikit_learn_extra-0.2.0-cp36-cp36m-win_amd64.whl", hash = "sha256:22e0729437d15c27859b4a8fa7101e0a3c8df62e2fe4ba6a47c0f1c481710eb6"},
+    {file = "scikit_learn_extra-0.2.0-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:3117f1cc70f9fa7d6b58bbc5af2142ccfb5b5f04415f40edd7d08388c35cd775"},
+    {file = "scikit_learn_extra-0.2.0-cp37-cp37m-manylinux1_i686.whl", hash = "sha256:be6369b4732144b19fd0f038111c8f091c45dc75b8b5be84b6da70f89ce862c5"},
+    {file = "scikit_learn_extra-0.2.0-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:67bccc9d01ce6cb4d0f5648c92856c9fbb10dae209be5e3857039ba7b8221bb2"},
+    {file = "scikit_learn_extra-0.2.0-cp37-cp37m-manylinux2010_i686.whl", hash = "sha256:e53dc0b533ebc0880fe53a719c0045eda8c565f2e4907bf75218f2966403826f"},
+    {file = "scikit_learn_extra-0.2.0-cp37-cp37m-manylinux2010_x86_64.whl", hash = "sha256:4512c53917e877dcdc84794dc1202f3d5cbed571d30bf25e1de03aa7b51e3e08"},
+    {file = "scikit_learn_extra-0.2.0-cp37-cp37m-win32.whl", hash = "sha256:1822b4eb5103b90299a69b94354b2ea6a5bb19661e589f449aa000e02492da8b"},
+    {file = "scikit_learn_extra-0.2.0-cp37-cp37m-win_amd64.whl", hash = "sha256:b1b94d2ce47ec66fa1c4cf1cdacde71bd6cd479954b159d0642c280135dfba75"},
+    {file = "scikit_learn_extra-0.2.0-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:fedc19137d58d549ad54195d6a976aeedd1a1b98cc391edb39b0bfb57a6eb04c"},
+    {file = "scikit_learn_extra-0.2.0-cp38-cp38-manylinux1_i686.whl", hash = "sha256:8600fa6e15dac5733d80e5606d275396b5e39168f51028a5a34cc4cee6e0cb99"},
+    {file = "scikit_learn_extra-0.2.0-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:686c250a11fc3082b4adda5f56cfb7f15461f73343612cf6e22eeabb22df4a92"},
+    {file = "scikit_learn_extra-0.2.0-cp38-cp38-manylinux2010_i686.whl", hash = "sha256:f159ba9a8851982e35d9d9cc66d986614e3625fd33cfc2e6ecc55763cd453126"},
+    {file = "scikit_learn_extra-0.2.0-cp38-cp38-manylinux2010_x86_64.whl", hash = "sha256:f5fa998b96855a49a556f1d2da1b5df67fd1df73c4f5fd2b8ec460dbdcf71b9c"},
+    {file = "scikit_learn_extra-0.2.0-cp38-cp38-win32.whl", hash = "sha256:6f53f5719e56dd525ca98a68bfdbe4f7c4351df522cb5473ea0b1012bf51594a"},
+    {file = "scikit_learn_extra-0.2.0-cp38-cp38-win_amd64.whl", hash = "sha256:37c9a96422fb62fb9a0875390186d8ae7e15e8bcd4f950f01bb4d28ba97d98d0"},
+    {file = "scikit_learn_extra-0.2.0-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:132de3a9b5d6d2b21d3990ef667795c3ed2a3f7931d7248ac98eca0f3a57671e"},
+    {file = "scikit_learn_extra-0.2.0-cp39-cp39-manylinux1_i686.whl", hash = "sha256:cf82956b8123a8220d7e875d70b4b3a67d1512911a654f384f5b68cc612cd0cf"},
+    {file = "scikit_learn_extra-0.2.0-cp39-cp39-manylinux1_x86_64.whl", hash = "sha256:fc1ed035ab35f9c5b02c2b876b3ff603da27dd58bc9245bd2b58ab8e131796c4"},
+    {file = "scikit_learn_extra-0.2.0-cp39-cp39-manylinux2010_i686.whl", hash = "sha256:1349edba9a074162f71c3bfbe97f56c9580c396f012b978916fe59e67455102a"},
+    {file = "scikit_learn_extra-0.2.0-cp39-cp39-manylinux2010_x86_64.whl", hash = "sha256:f605595f8c0f9a32380bf2d99f589dadbf6a13abeecb1d09cda2caa7d05de878"},
+    {file = "scikit_learn_extra-0.2.0-cp39-cp39-win32.whl", hash = "sha256:e30b120dc379e8b2268965a2f3be320df56ac0f0dbf501da5e5e5a225a0dc8c9"},
+    {file = "scikit_learn_extra-0.2.0-cp39-cp39-win_amd64.whl", hash = "sha256:6c341eefaffd096e2fb928af39258823410ca08530a31082769add6866539135"},
 ]
 scipy = [
     {file = "scipy-1.6.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:a15a1f3fc0abff33e792d6049161b7795909b40b97c6cc2934ed54384017ab76"},

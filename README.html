@@ -174,12 +174,20 @@ pre code {
 <div id="setup" class="section level1">
 <h1>Setup</h1>
 <p>Foi utilizado duas lingugagens de programação para se trabalhar nos problemas propostos: R e Python. Sendo assim, há dois setups diferentes.</p>
+<p>Comecemos pelo Python. Assume-se que o usuário já tem Python instalado na sua máquina. Idealmente, há o uso do <a href="https://python-poetry.org/">Poetry</a> para a manuntenção de dependências. Por favor, se referir a sua instalação neste <a href="https://python-poetry.org/docs/#installation">link</a>.</p>
+<p>Porém, com o documento “pyproject.toml” é possível instalar as depêndencias utilizando o “pip” também. Utilizando:</p>
+<pre class="python"><code>python -m pip install .</code></pre>
+<p>Em relação ao R, igualmente assume-se que o usuário tem o R instalado em sua máquina. Idealmente, há o uso do pacote <a href="https://rstudio.github.io/renv/articles/renv.html">renv</a> para instalar as dependências automaticamente. Uma vez tendo este pacote instalado na pasta principal basta utilizar o comando dentro do R:</p>
+<pre class="r"><code>renv::restore() </code></pre>
 </div>
-<div id="métodos" class="section level1">
-<h1>Métodos</h1>
+<div id="organização-dos-arquivos" class="section level1">
+<h1>Organização dos Arquivos</h1>
+<p>Há muitas pastas e arquivos suportes. O foco se dá na pasta “notebook”, onde contém todos os notebooks em Python e R onde as análises foram realizadas. Como exceção para garantir uma boa visualização, dentro de “notebook” há o arquivo eda.html como output do Rmarkdown eda.Rmd.</p>
+<p>Além disto, há a pasta “docs” onde contém um conjunto de arquivos informativos. Em especial, contém as referências para as técnicas usadas nos desafios de modelagem, e também contém as idéias pensadas e executadas no desafio de EDA.</p>
 </div>
 <div id="agradecimentos" class="section level1">
 <h1>Agradecimentos</h1>
+<p>Gostaria de agradecer a empresa Oncase pela oportunidade de realizar este desafio e demonstrar minhas habilidade e toda a comunidade open-source do R e Python pelos incríveis pacotes disponiblizados gratuitamente.</p>
 </div>
 
 

@@ -9,8 +9,10 @@ output: html_document
 library(tidyverse)
 library(jsonlite)
 library(skimr)
+library(tidytext)
+library(lubridate)
 
-knitr::opts_chunk$set(echo = TRUE, warning=FALSE)
+knitr::opts_chunk$set(echo = FALSE, warning=FALSE)
 knitr::opts_knit$set(
   root.dir = '/home/adriel_martins/Documents/desafio_oncase/')
 
@@ -24,8 +26,7 @@ e apresentando quais insights podem ser obtidos a partir delas;
 b. Construa graficamente um storytelling a partir das variáveis apresentadas no
 problema;
 c. Descreva o caminho escolhido para sua EDA;
-d. Descreva quais outras técnicas poderiam ser aplicas e porquê você não as
-escolheu;
+d. Descreva quais outras técnicas poderiam ser aplicadass e porquê você não as escolheu;
 e. Utilize os dados: eda_data.zip
 
 # Lendo os Dados
@@ -171,19 +172,238 @@ de todos estes elementos.
 
 ## Ingredientes
 
-Vejamos o impacto dos ingredientes na variável de rating.
-
+Vejamos o impacto dos ingredientes/modo de preparo tem na variável de rating.
 
 ```{r}
 df %>% 
-  head() %>% 
-  pull(categories)
+  mutate(target = map_dbl(ingredients, length),
+         rating = as.factor(rating)) %>% 
+  select(all_of(c('target', 'rating'))) %>% 
+  drop_na() %>% 
+  ggplot() +
+  geom_boxplot(aes(y = target, x = rating))
+```
+
+Vemos que a quantidade de ingredientes não faz muita diferença na variável rating.
+
+```{r}
+concatenate_list <- function(l){
+  result <- ' '
+  for(i in l){
+    result <- str_c(result, i, sep=' ')
+  }
+  return(result)
+}
+
+data(stop_words)
+
+df %>% 
+  select(all_of(c('rating', 'ingredients'))) %>% 
+  # Tokenizing words
+  mutate(ingredients =  map_chr(ingredients,
+                                concatenate_list),
+         index = 1:n()) %>% 
+  unnest_tokens(word, ingredients) %>% 
+  # Removing stop-words
+  anti_join(stop_words) %>% 
+  # Filtering numbers
+  filter(!(word %in% as.character(1:9))) %>% 
+  # Filtering measures
+  filter(!(word %in% c('cup', 'tablespoons', 'teaspoon', 'cups',
+                       'tablespoon', 'inch', 'ounces', 'teaspoons'))) %>% 
+  # Get top n words by rating
+  group_by(rating) %>% 
+  count(word, sort = TRUE) %>% 
+  mutate(rank = 1:n()) %>% 
+  filter(rank <= 10) %>% 
+  # drop NA's
+  drop_na() %>% 
+  # Plotting
+  ggplot() +
+  geom_text(aes(x = factor(rating), y = factor(rank), label = word)) +
+  labs(y = 'Top N', x = 'Rating')
+```
+
+Vemos que os top 10 entre os ratings tem uma concordância entre si também. Comidas frescas, com sal, açucar, contendo óleo, etc.
+
+## Categorias
+
+Agora, vejamos o impacto das categorias no rating.
+
+```{r}
+df_categories <- 
+  df %>% 
+  select(all_of(c('rating', 'categories'))) %>% 
+  # Tokenizing words
+  mutate(target_col =  map_chr(categories,
+                                concatenate_list),
+         index = 1:n()) %>% 
+  unnest_tokens(word, target_col) %>% 
+  # Removing stop-words
+  anti_join(stop_words) %>% 
+  # # Get top N words by rating
+  group_by(rating) %>%
+  count(word, sort = TRUE) %>%
+  mutate(rank = 1:n()) 
+
+df_categories %>% 
+  filter(rank <= 10) %>%
+  # drop NA's
+  drop_na() %>%
+  # Plotting
+  ggplot() +
+  geom_text(aes(x = factor(rating), y = factor(rank), label = word)) +
+  labs(y = 'Rank', x = 'Rating')
+```
+
+Vemos que o top 5 em geral tem uma concordância entre os diferentes ratings. As categorias "free", "bon-appétit", "peanut", "soy", "nut" e "tree" são campeãs. Contudo, essa igualdade entre os ratings faz com que essa informação não nos responda a nossa Pergunta 1. Ao irmos para os rank de número 8 para cima já notamos uma diferença. Vejamos com mais detalhe essas diferenças.
+
+
+```{r}
+df_categories %>% 
+  filter(between(rank, 5, 15)) %>%
+  # drop NA's
+  drop_na() %>%
+  # Plotting
+  ggplot() +
+  geom_text(aes(x = factor(rating), y = factor(rank), label = word)) +
+  labs(y = 'Rank', x = 'Rating')
+```
+
+Há alguns insights interessantes aqui. Comentaremos sobre as categorias "vegetarian", "kosher" e "pescatarian":
+
+1. Vemos que os ratings 2.5 e 3.125 tiveream uma preferência maior por "vegetarian", isso indica que comidas vegetarianas tem uma maior dificuldade em agradar perfeitamente, pois onde no rating 5 e 4.375 temos que comidas vegetarianas obtiveram um rank número 8, sendo mais raro do que o rank número 5.
+
+```{r}
+df_categories %>% 
+  filter(between(rank, 5, 15)) %>%
+  filter(word == 'vegetarian') %>% 
+  # drop NA's
+  drop_na() %>%
+  # Plotting
+  ggplot() +
+  geom_text(aes(x = factor(rating), y = factor(rank), label = word)) +
+  labs(y = 'Rank', x = 'Rating')
 ```
 
 
+2. Comidas Kosher (comidas permitidas segundo as tradições judaicas), embora estivessem nas top 10 categorias do Rating 5 e 4.375, também ficaram nas top 10 do rating 1.25. Curiosamente, não ficaram também no top 10 do rating 0. Além de permanecerem no top 15 de todos os ratings.
+
+  Isto indica que comidas Kosher, mesmo sendo bastante peculiares, são muito populares e existe a possibilidade de fazer excelente comidas Kosher e péssimas comidas Kosher. 
+
+```{r}
+df_categories %>% 
+  filter(between(rank, 5, 15)) %>%
+  filter(word == 'kosher') %>% 
+  # drop NA's
+  drop_na() %>%
+  # Plotting
+  ggplot() +
+  geom_text(aes(x = factor(rating), y = factor(rank), label = word)) +
+  labs(y = 'Rank', x = 'Rating')
+```
 
 
+3. Similarmente a comidas Kosher, vemos essa variância em relação a distribuição de "pescatarian" (comidas que só tem peixe) perante os ratings. Embora sejam bastante populares estão no top 15 de todos os ratings, vemos que há muitos que classificam comidas "pescatarian" com o ranking acima de 4 e muitos que colocam entre 1.5 e 2, o que pode nos indicar que comidas com peixe tem uma sensibilidade maior. Ou seja, ou você acerta ou você erra bastante.
 
+```{r}
+df_categories %>% 
+  filter(between(rank, 5, 15)) %>%
+  filter(word == 'pescatarian') %>% 
+  # drop NA's
+  drop_na() %>%
+  # Plotting
+  ggplot() +
+  geom_text(aes(x = factor(rating), y = factor(rank), label = word)) +
+  labs(y = 'Rank', x = 'Rating')
+```
 
+## Instruções (directions)
 
+Vejamos aqui o impacto da quantidade de direções em ditar um bom rating.
 
+```{r}
+df %>% 
+  select(all_of(c('directions', 'rating'))) %>% 
+  mutate(directions = map_int(directions, length)) %>% 
+  drop_na() %>% 
+  ggplot() +
+  geom_boxplot(aes(x = factor(rating), y = directions)) +
+  labs(x = 'Rating', y = '# de Instruções')
+```
+
+A quantidade de instruções não parece influenciar em grande magnitudes o rating, contudo notamos que há certo impacto sim. Os rating 0, 1 e 2.5, tiveram um baixo número de instruções comparado aos demais. Além de que o rating 5 tem uma tendência maior de conter um número maior de instruções do que demais. O que nos indica de que receitas bem instruídas são em geral melhores do que as aquelas pouco instruídas.
+
+# Pergunta 2: Como se comportam essa variáveis no tempo?
+
+## Rating
+
+```{r}
+df %>% 
+  mutate(date = date(date),
+         year = year(date)) %>% 
+  select(all_of(c('rating', 'year'))) %>% 
+  drop_na() %>% 
+  group_by(year) %>%
+  summarise(mu = mean(rating),
+            sd = sd(rating)) %>%
+  ggplot() +
+  geom_path(aes(x = year, y = mu)) +
+  geom_ribbon(aes(ymin = mu + sd, ymax = mu - sd,
+                  x = year),
+              fill = "grey70", alpha = 0.3) + 
+  labs(title = 'Rating através dos anos',
+       y = 'Rating', x = 'Year')
+```
+
+Esse gráfico foi construído utilizando a média e o intervalo dos desvios padrões de cada ano. Os anos que não tem intervalo é porque só tinham uma observação. Interessante notar como os houve um declínio em geral desde os anos 2000 até a década dos anos 10. Porém, houve uma certa estabilidade nessa década dos anos 10.
+
+O que podemos concluir com esse gráfico é de que o acréscimo de receita dos últimos tempos tem sido de qualidade questionável. Talvez as pessoas estejam experimentando mais com a culinária o que leva a essa variância maior, porém, abaixa a sua média em geral, com novos pratos que não são apetitosos.
+
+## Quantidade de Receitas
+
+Outro gráfico interessante é vermos a quantidade de receitas no tempo.
+
+```{r}
+df %>% 
+  mutate(date = date(date),
+         year = year(date)) %>% 
+  select(all_of(c('year'))) %>% 
+  drop_na() %>% 
+  filter(year > 2000) %>% 
+  group_by(year) %>%
+  summarise(n = n()) %>%
+  ggplot() +
+  geom_col(aes(x = year, y = n)) +
+  labs(title = 'Rating através dos anos',
+       y = '# de Receitas', x = 'Year')
+```
+
+Vemos que nessa nossa base de dados a maioria das receitas foi adicionada no ano de 2004. Isto é interessante para notarmos que a maioria das nossas análises irá refletir esse período e não a atualidade.
+
+## Fat, sodium, protein, etc..
+
+```{r}
+df %>% 
+  mutate(date = date(date),
+         year = year(date)) %>% 
+  select(all_of(c('sodium', 'fat', 'protein', 'calories',
+                  'year'))) %>% 
+  drop_na() %>%
+  pivot_longer(cols = all_of(c('sodium', 'fat',
+                               'protein', 'calories'))) %>% 
+  group_by(year, name) %>%
+  summarise(mu = mean(value)/sd(value)) %>%
+  ggplot() +
+  geom_path(aes(x = year, y = mu, colour = name)) +
+  labs(title = 'Quantidade através dos anos',
+       subtitle = 'Os valores foram normalizados para comparação',
+       y = NULL, x = 'Ano') +
+  scale_colour_discrete(name="Séries")
+```
+
+Vemos que a quantidade se manteve basicamente a mesma, porém, há alguns insights interessantes.
+
+1. Houve uma grande explosão de sódio no ano de 1999.
+2. A taxa de gordura (fat) estava crescendo no começo dos anos 2000 depois houve uma grande diminuição aparentemente repentina e estabilizou.
+3. Tirando a variável "fat" nos anos 2000, todas essas taxas tem sua média variando, o que pode indicar que os gostos culinários podem ter essas mudanças de maneira cíclica mesmo.

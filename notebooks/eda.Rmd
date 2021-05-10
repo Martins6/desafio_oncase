@@ -408,10 +408,9 @@ Vemos que a quantidade se manteve basicamente a mesma, porém, há alguns insigh
 2. A taxa de gordura (fat) estava crescendo no começo dos anos 2000 depois houve uma grande diminuição aparentemente repentina e estabilizou.
 3. Tirando a variável "fat" nos anos 2000, todas essas taxas tem sua média variando, o que pode indicar que os gostos culinários podem ter essas mudanças de maneira cíclica mesmo.
 
-
 # Propostas de Análise
 
-Como este desafio tem um tempo limite, não há como explorar todas as idéias que tive. Além disso, o foco deste desafio era em Visualizações de Dados, porém, modelos podem servir de suporte para uma análise mais detalhada. Segue algumas das idéias que acho que seria interessante para continuar a exploração dos dados:
+Como este desafio tem um tempo limite, não há como explorar todas as idéias que tive. Há o documento em "docs/ideas_for_eda.md" que contém todas as idéias visuais que queria ter tido tempo de explorar. Além disso, o foco deste desafio era em Visualizações de Dados, porém, modelos podem servir de suporte para uma análise mais detalhada. Segue algumas das idéias que acho que seria interessante para continuar a exploração dos dados:
 
 * Modelagem de classificação de rating utilizando as demais variáveis como: fat, sodium, ano da receita. Os modelos são do tipo regressão multinominal, arvóres de decisão, etc. Utilizando estes modelos podemos ver os impactos de cada variável em relação ao rating. Além disto, podemos utilizar modelos mais complexos como Redes Neurais e utilizar medidas de descrição do modelo como SHAP, etc.
 

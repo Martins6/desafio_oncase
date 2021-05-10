@@ -1,6 +1,7 @@
 library(tidyverse)
 library(jsonlite)
 library(skimr)
+library(tidytext)
 
 df <- 
   fromJSON('data/receitas.json') %>% 
@@ -25,11 +26,21 @@ for(i in c('sodium', 'fat', 'protein', 'calories')){
     clean_outliers(i)
 }
 
-
+library(lubridate)
 df %>% 
-  head() %>% 
-  mutate(target = map_dbl(categories, length)) %>% 
-  pull(target)
+  mutate(date = date(date),
+         year = year(date)) %>% 
+  select(all_of(c('sodium', 'fat', 'protein', 'calories',
+                  'year'))) %>% 
+  drop_na() %>%
+  pivot_longer(cols = all_of(c('sodium', 'fat',
+                               'protein', 'calories'))) %>% 
+  group_by(year, name) %>%
+  summarise(mu = mean(value)/sd(value)) %>% 
+  filter(name == 'sodium')
+
+
+
 
 
 

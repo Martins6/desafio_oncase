@@ -414,6 +414,6 @@ Como este desafio tem um tempo limite, não há como explorar todas as idéias q
 
 * Modelagem de classificação de rating utilizando as demais variáveis como: fat, sodium, ano da receita. Os modelos são do tipo regressão multinominal, arvóres de decisão, etc. Utilizando estes modelos podemos ver os impactos de cada variável em relação ao rating. Além disto, podemos utilizar modelos mais complexos como Redes Neurais e utilizar medidas de descrição do modelo como SHAP, etc.
 
-* Criar matrizes TF-IDF com os textos de categories, titles, directions e utilizar nos modelos descritos acima.
+* Criar matrizes TF-IDF com os textos de categories, titles, directions e utilizar nos modelos descritos acima. Além de usar modelos não-supervisionados como K-Means, Gaussian Mixture Models, Hierarchical, etc. para agrupar receitas através dos seus textos descritivos e dados como sódio, gordura, etc.
 
 * Utilizar modelos de séries temporais como ARMA, Suavização Exponencial, etc. Para entender o comportamento das variáveis no tempo de maneira mais estruturada, realizando até testes de hipótese, etc.

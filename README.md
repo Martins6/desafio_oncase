@@ -1,6 +1,6 @@
 # Desafio de Data Science - Oncase
 
-Desafio proposto pela empresa Oncase para testar minhas habilidades em DS.
+Desafio proposto pela empresa Oncase para testar minhas habilidades em DS. Priorizei ser criativo e engenhoso mais do que seguir os padrões, para assim demonstrar um maior escopo das minhas habilidades.
 
 # Setup
 
